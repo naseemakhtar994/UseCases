@@ -133,8 +133,7 @@ public class GenericUseCase implements IGenericUseCase {
     @Deprecated
     public void executeDynamicGetList(@NonNull Subscriber UseCaseSubscriber, String url, @NonNull Class presentationClass,
                                       Class dataClass, boolean persist) {
-        executeDynamicGetList(UseCaseSubscriber, url, presentationClass, dataClass,
-                persist, false);
+        executeDynamicGetList(UseCaseSubscriber, url, presentationClass, dataClass, persist, false);
     }
 
     /**
@@ -145,8 +144,8 @@ public class GenericUseCase implements IGenericUseCase {
     @Override
     public void executeDynamicGetList(@NonNull GetListRequest genericUseCaseRequest) throws Exception {
         executeDynamicGetList(genericUseCaseRequest.getSubscriber(), genericUseCaseRequest.getUrl(),
-                genericUseCaseRequest.getPresentationClass(),
-                genericUseCaseRequest.getDataClass(), genericUseCaseRequest.isPersist(), genericUseCaseRequest.isShouldCache());
+                genericUseCaseRequest.getPresentationClass(), genericUseCaseRequest.getDataClass(),
+                genericUseCaseRequest.isPersist(), genericUseCaseRequest.isShouldCache());
     }
 
     /**
@@ -159,10 +158,7 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeDynamicGetList(@NonNull Subscriber UseCaseSubscriber, String url, @NonNull Class presentationClass,
                                       Class dataClass, boolean persist, boolean shouldCache) {
         mSubscription = getList(new GetListRequest.GetListRequestBuilder(dataClass, persist)
-                .presentationClass(presentationClass)
-                .url(url)
-                .shouldCache(shouldCache)
-                .build())
+                .presentationClass(presentationClass).url(url).shouldCache(shouldCache).build())
                 .subscribe(UseCaseSubscriber);
     }
 
@@ -187,8 +183,8 @@ public class GenericUseCase implements IGenericUseCase {
     @Deprecated
     public void executeGetObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName,
                                  int itemId, @NonNull Class presentationClass, Class dataClass, boolean persist) {
-        executeGetObject(UseCaseSubscriber, url, idColumnName, itemId, presentationClass,
-                dataClass, persist, false);
+        executeGetObject(UseCaseSubscriber, url, idColumnName, itemId, presentationClass, dataClass,
+                persist, false);
     }
 
     /**
@@ -201,14 +197,9 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeGetObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName,
                                  int itemId, @NonNull Class presentationClass, Class dataClass,
                                  boolean persist, boolean shouldCache) {
-        executeGetObject(new GetObjectRequest.GetObjectRequestBuilder(dataClass, persist)
-                .id(itemId)
-                .subscriber(UseCaseSubscriber)
-                .idColumnName(idColumnName)
-                .presentationClass(presentationClass)
-                .url(url)
-                .shouldCache(shouldCache)
-                .build());
+        executeGetObject(new GetObjectRequest.GetObjectRequestBuilder(dataClass, persist).id(itemId)
+                .subscriber(UseCaseSubscriber).idColumnName(idColumnName).presentationClass(presentationClass)
+                .url(url).shouldCache(shouldCache).build());
     }
 
     /**
@@ -301,11 +292,7 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeDynamicPostList(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName,
                                        JSONArray jsonArray, Class dataClass, boolean persist) {
         executeDynamicPostList(new PostRequest.PostRequestBuilder(dataClass, persist)
-                .subscriber(UseCaseSubscriber)
-                .url(url)
-                .idColumnName(idColumnName)
-                .jsonArray(jsonArray)
-                .build());
+                .subscriber(UseCaseSubscriber).url(url).idColumnName(idColumnName).jsonArray(jsonArray).build());
     }
 
     /**
@@ -315,8 +302,7 @@ public class GenericUseCase implements IGenericUseCase {
      */
     @Override
     public void executeDynamicPostList(@NonNull PostRequest postRequest) {
-        mSubscription = postList(postRequest)
-                .subscribe(postRequest.getSubscriber());
+        mSubscription = postList(postRequest).subscribe(postRequest.getSubscriber());
     }
 
     @Override
@@ -368,10 +354,7 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeDeleteCollection(@NonNull Subscriber UseCaseSubscriber, String url, HashMap<String,
             Object> keyValuePairs, Class dataClass, boolean persist) {
         executeDeleteCollection(new PostRequest.PostRequestBuilder(dataClass, persist)
-                .subscriber(UseCaseSubscriber)
-                .url(url)
-                .hashMap(keyValuePairs)
-                .build());
+                .subscriber(UseCaseSubscriber).url(url).hashMap(keyValuePairs).build());
     }
 
     /**
@@ -381,8 +364,7 @@ public class GenericUseCase implements IGenericUseCase {
      */
     @Override
     public void executeDeleteCollection(@NonNull PostRequest deleteRequest) {
-        mSubscription = deleteCollection(deleteRequest)
-                .subscribe(deleteRequest.getSubscriber());
+        mSubscription = deleteCollection(deleteRequest).subscribe(deleteRequest.getSubscriber());
     }
 
     @Override
@@ -408,8 +390,8 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeDynamicPutObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName,
                                         HashMap<String, Object> keyValuePairs, @NonNull Class presentationClass,
                                         Class dataClass, boolean persist) {
-        executeDynamicPutObject(new PostRequest(UseCaseSubscriber, idColumnName, url,
-                keyValuePairs, presentationClass, dataClass, persist));
+        executeDynamicPutObject(new PostRequest(UseCaseSubscriber, idColumnName, url, keyValuePairs,
+                presentationClass, dataClass, persist));
     }
 
     /**
@@ -453,8 +435,7 @@ public class GenericUseCase implements IGenericUseCase {
     public Observable downloadFile(@NonNull FileIORequest fileIORequest) {
         return mRepository.downloadFileDynamically(fileIORequest.getUrl(), fileIORequest.getFile(),
                 fileIORequest.onWifi(), fileIORequest.isWhileCharging(), fileIORequest.getPresentationClass(),
-                fileIORequest.getDataClass())
-                .compose(applySchedulers());
+                fileIORequest.getDataClass()).compose(applySchedulers());
     }
 
     /**
@@ -516,9 +497,7 @@ public class GenericUseCase implements IGenericUseCase {
     public void executeDynamicDeleteAll(@NonNull Subscriber UseCaseSubscriber, String url,
                                         Class dataClass, boolean persist) {
         executeDynamicDeleteAll(new PostRequest.PostRequestBuilder(dataClass, persist)
-                .subscriber(UseCaseSubscriber)
-                .url(url)
-                .build());
+                .subscriber(UseCaseSubscriber).url(url).build());
     }
 
     /**
