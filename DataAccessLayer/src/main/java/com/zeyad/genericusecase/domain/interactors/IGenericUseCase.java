@@ -158,80 +158,71 @@ public interface IGenericUseCase {
     @SuppressWarnings("unchecked")
     void executeDynamicGetList(@NonNull GetListRequest genericUseCaseRequest) throws Exception;
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicGetList(@NonNull Subscriber UseCaseSubscriber, String url, @NonNull Class presentationClass,
                                Class dataClass, boolean persist, boolean shouldCache);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeGetObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName, int itemId,
                           @NonNull Class presentationClass, Class dataClass, boolean persist);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeGetObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName, int itemId,
                           @NonNull Class presentationClass, Class dataClass, boolean persist,
                           boolean shouldCache);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeGetObject(@NonNull GetObjectRequest getObjectRequest);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicPostObject(@NonNull Subscriber UseCaseSubscriber, String url,
                                   String idColumnName, HashMap<String, Object> keyValuePairs,
                                   @NonNull Class presentationClass,
                                   Class dataClass, boolean persist);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicPostObject(@NonNull Subscriber UseCaseSubscriber, String idColumnName, String url, JSONObject keyValuePairs,
                                   @NonNull Class presentationClass, Class dataClass,
                                   boolean persist);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeDynamicPostObject(@NonNull PostRequest postRequest);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicPostList(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName, JSONArray jsonArray,
                                 Class dataClass, boolean persist);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeDynamicPostList(@NonNull PostRequest postRequest);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDeleteCollection(@NonNull Subscriber UseCaseSubscriber, String url, HashMap<String,
             Object> keyValuePairs, Class dataClass, boolean persist);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeDeleteCollection(@NonNull PostRequest deleteRequest);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeDynamicPutObject(@NonNull PostRequest postRequest);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicPutObject(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName, HashMap<String,
             Object> keyValuePairs, @NonNull Class presentationClass, Class dataClass,
                                  boolean persist);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicPutList(@NonNull Subscriber UseCaseSubscriber, String url, String idColumnName, HashMap<String,
             Object> keyValuePairs, @NonNull Class presentationClass, Class dataClass,
                                boolean persist);
 
+    @Deprecated
     void executeDynamicPutList(@NonNull PostRequest postRequest);
 
-    @SuppressWarnings("unchecked")
     @Deprecated
     void executeDynamicDeleteAll(@NonNull Subscriber UseCaseSubscriber, String url, Class dataClass,
                                  boolean persist);
 
-    @SuppressWarnings("unchecked")
+    @Deprecated
     void executeDynamicDeleteAll(@NonNull PostRequest postRequest);
 
     void unsubscribe();
