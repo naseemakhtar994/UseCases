@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.List;
 
 import io.realm.RealmQuery;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Interface that represents a data store from where data is retrieved.

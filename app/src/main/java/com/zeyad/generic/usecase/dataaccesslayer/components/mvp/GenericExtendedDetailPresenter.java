@@ -2,7 +2,7 @@ package com.zeyad.generic.usecase.dataaccesslayer.components.mvp;
 
 import android.support.annotation.NonNull;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author by zeyad on 19/05/16.
@@ -31,7 +31,7 @@ public abstract class GenericExtendedDetailPresenter<M> extends GenericDetailPre
 
     public abstract void submitEdit();
 
-    public final class PutSubscriber extends Subscriber<M> {
+    public final class PutSubscriber extends Disposable<M> {
         @Override
         public void onCompleted() {
             hideViewLoading();

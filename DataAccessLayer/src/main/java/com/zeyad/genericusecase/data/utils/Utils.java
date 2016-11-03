@@ -23,10 +23,10 @@ import com.zeyad.genericusecase.data.db.DataBaseManager;
 
 import java.util.List;
 
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
-import rx.Observable;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
 
 public class Utils {
     public static boolean doesContextBelongsToApplication(Context mContext) {
@@ -38,7 +38,7 @@ public class Utils {
     }
 
     // Simple logging to let us know what each source is returning
-    public static Observable.Transformer<List, List> logSources(final String source, @NonNull DataBaseManager realmManager) {
+    public static ObservableTransformer<List, List> logSources(final String source, @NonNull DataBaseManager realmManager) {
         return observable -> observable.doOnNext(entities -> {
             if (entities == null)
                 System.out.println(source + " does not have any data.");
@@ -81,15 +81,15 @@ public class Utils {
     }
 
     @Nullable
-    public static CompositeSubscription getNewCompositeSubIfUnsubscribed(@Nullable CompositeSubscription subscription) {
-        if (subscription == null || subscription.isUnsubscribed())
-            return new CompositeSubscription();
+    public static CompositeDisposable getNewCompositeSubIfUnsubscribed(@Nullable CompositeDisposable subscription) {
+        if (subscription == null || subscription.isDisposed())
+            return new CompositeDisposable();
         return subscription;
     }
 
-    public static void unsubscribeIfNotNull(@Nullable Subscription subscription) {
+    public static void unsubscribeIfNotNull(@Nullable Disposable subscription) {
         if (subscription != null)
-            subscription.unsubscribe();
+            subscription.dispose();
     }
 
     public static int getMaxId(Class clazz, String column) {

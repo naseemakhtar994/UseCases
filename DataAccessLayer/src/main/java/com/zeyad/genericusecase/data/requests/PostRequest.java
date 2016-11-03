@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import rx.Subscriber;
+import io.reactivex.disposables.Disposable;
 
 /**
  * @author zeyad on 7/29/16.
@@ -17,7 +17,7 @@ import rx.Subscriber;
 public class PostRequest {
     public static final String POST = "post", DELETE = "delete", PUT = "put";
     private String mUrl, mIdColumnName, mMethod;
-    private Subscriber mSubscriber;
+    private Disposable mSubscriber;
     private Class mDataClass, mPresentationClass;
     private boolean mPersist, mQueuable;
     private JSONObject mJsonObject;
@@ -38,7 +38,7 @@ public class PostRequest {
         mMethod = postRequestBuilder.mMethod;
     }
 
-    public PostRequest(Subscriber subscriber, String idColumnName, String url, JSONObject keyValuePairs,
+    public PostRequest(Disposable subscriber, String idColumnName, String url, JSONObject keyValuePairs,
                        Class presentationClass, Class dataClass, boolean persist) {
         mIdColumnName = idColumnName;
         mJsonObject = keyValuePairs;
@@ -50,7 +50,7 @@ public class PostRequest {
     }
 
     // for test
-    public PostRequest(Subscriber subscriber, String idColumnName, String url, JSONArray keyValuePairs,
+    public PostRequest(Disposable subscriber, String idColumnName, String url, JSONArray keyValuePairs,
                        Class presentationClass, Class dataClass, boolean persist) {
         mIdColumnName = idColumnName;
         mJsonArray = keyValuePairs;
@@ -61,7 +61,7 @@ public class PostRequest {
         mUrl = url;
     }
 
-    public PostRequest(Subscriber subscriber, String idColumnName, String url, HashMap<String, Object> keyValuePairs,
+    public PostRequest(Disposable subscriber, String idColumnName, String url, HashMap<String, Object> keyValuePairs,
                        Class presentationClass, Class dataClass, boolean persist) {
         mIdColumnName = idColumnName;
         mKeyValuePairs = keyValuePairs;
@@ -92,7 +92,7 @@ public class PostRequest {
         return mUrl;
     }
 
-    public Subscriber getSubscriber() {
+    public Disposable getSubscriber() {
         return mSubscriber;
     }
 
@@ -137,7 +137,7 @@ public class PostRequest {
         JSONObject mJsonObject;
         HashMap<String, Object> mKeyValuePairs;
         String mUrl, mIdColumnName, mMethod;
-        Subscriber mSubscriber;
+        Disposable mSubscriber;
         Class mDataClass, mPresentationClass;
         boolean mPersist, mQueuable;
 
@@ -165,7 +165,7 @@ public class PostRequest {
         }
 
         @NonNull
-        public PostRequestBuilder subscriber(Subscriber subscriber) {
+        public PostRequestBuilder subscriber(Disposable subscriber) {
             mSubscriber = subscriber;
             return this;
         }

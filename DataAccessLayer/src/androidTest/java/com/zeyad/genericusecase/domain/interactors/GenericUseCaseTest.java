@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.realm.RealmQuery;
-import rx.Observable;
-import rx.Subscriber;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+ import io.reactivex.disposables.Disposable;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static org.mockito.Matchers.eq;
 
@@ -64,7 +64,7 @@ public class GenericUseCaseTest {
         genericUseCase.getObject(new GetRequest(useCaseSubscriber, getUrl()
                 , getIdColumnName(), getItemId(), getPresentationClass()
                 , getDataClass(), shouldPersist, false))
-                .subscribe(useCaseSubscriber);
+                .subscribeWith(useCaseSubscriber);
         return useCaseSubscriber;
     }
 
@@ -158,7 +158,7 @@ public class GenericUseCaseTest {
         return Observable.create(
                 new Observable.OnSubscribe<List>() {
                     @Override
-                    public void call(@NonNull Subscriber<? super List> subscriber) {
+                    public void call(@NonNull Disposable<? super List> subscriber) {
                         subscriber.onNext(Collections.singletonList(createTestModel()));
                     }
                 });
@@ -190,7 +190,7 @@ public class GenericUseCaseTest {
         final PostRequest postRequest = new PostRequest
                 .PostRequestBuilder(getDataClass(), toPersist)
                 .url(getUrl()).build();
-        genericUse.deleteAll(postRequest).subscribe(new TestSubscriber());
+        genericUse.deleteAll(postRequest).subscribeWith(new TestSubscriber());
     }
 
     private void putList_JsonArray(@NonNull IGenericUseCase genericUseCase, boolean toPersist) {
@@ -227,7 +227,7 @@ public class GenericUseCaseTest {
         final TestSubscriber subscriber = new TestSubscriber();
         final FileIORequest fileIORequest = getUploadRequest(onWifi, whileCharging);
         genericUse.uploadFile(fileIORequest)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -239,7 +239,7 @@ public class GenericUseCaseTest {
     private TestSubscriber putObject(@NonNull IGenericUseCase genericUse, boolean toPersist) {
         final TestSubscriber subscriber = new TestSubscriber();
         genericUse.putObject(getHashmapPostRequest(toPersist))
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -248,14 +248,14 @@ public class GenericUseCaseTest {
         final PostRequest deleteRequest = getHashmapPostRequest(toPersist);
         final TestSubscriber subscriber = (TestSubscriber) deleteRequest.getSubscriber();
         genericUse.deleteCollection(deleteRequest)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
     @NonNull
     private TestSubscriber executeSearch_RealmQuery(@NonNull IGenericUseCase genericUse) {
         TestSubscriber<Object> testSubscriber = new TestSubscriber<>();
-        genericUse.searchDisk(getRealmQuery(), getPresentationClass()).subscribe(testSubscriber);
+        genericUse.searchDisk(getRealmQuery(), getPresentationClass()).subscribeWith(testSubscriber);
         return testSubscriber;
     }
 
@@ -272,7 +272,7 @@ public class GenericUseCaseTest {
         final PostRequest jsonArrayPostRequest = getJsonArrayPostRequest(toPersist);
         TestSubscriber<Object> testSubscriber = (TestSubscriber<Object>) jsonArrayPostRequest.getSubscriber();
         genericUse.postList(jsonArrayPostRequest)
-                .subscribe(testSubscriber);
+                .subscribeWith(testSubscriber);
         return testSubscriber;
     }
 

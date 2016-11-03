@@ -16,14 +16,14 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
-import rx.Observable;
-import rx.Subscriber;
-import rx.schedulers.Schedulers;
 
 /**
  * {@link DataBaseManager} implementation.
@@ -249,9 +249,8 @@ public class RealmManager implements DataBaseManager {
             writeToPreferences(System.currentTimeMillis(), DataBaseManager.COLLECTION_SETTINGS_KEY_LAST_CACHE_UPDATE
                     + dataClass.getSimpleName(), "putAll");
             closeRealm();
-            return Observable.from(realmModels);
-        }).subscribeOn(Schedulers.immediate())
-                .subscribe(new PutAllSubscriberClass(realmModels));
+            return Observable.just(realmModels);
+        }).subscribeWith(new PutAllSubscriberClass(realmModels));
     }
 
     /**
@@ -288,8 +287,7 @@ public class RealmManager implements DataBaseManager {
                     + clazz.getSimpleName(), "evict");
             closeRealm();
             return Observable.just(isDeleted);
-        }).subscribeOn(Schedulers.immediate())
-                .subscribe(new EvictSubscriberClass(clazz));
+        }).subscribeWith(new EvictSubscriberClass(clazz));
     }
 
     /**
@@ -448,7 +446,7 @@ public class RealmManager implements DataBaseManager {
         T run();
     }
 
-    private class EvictSubscriberClass extends Subscriber<Object> {
+    private class EvictSubscriberClass extends DisposableObserver<Object> {
 
         private final Class mClazz;
 
@@ -457,12 +455,13 @@ public class RealmManager implements DataBaseManager {
         }
 
         @Override
-        public void onCompleted() {
+        public void onError(@NonNull Throwable e) {
+            e.printStackTrace();
         }
 
         @Override
-        public void onError(@NonNull Throwable e) {
-            e.printStackTrace();
+        public void onComplete() {
+
         }
 
         @Override
@@ -472,7 +471,7 @@ public class RealmManager implements DataBaseManager {
 
     }
 
-    private class PutAllSubscriberClass extends Subscriber<Object> {
+    private class PutAllSubscriberClass extends DisposableObserver<Object> {
 
         private final List<RealmObject> mRealmModels;
 
@@ -481,12 +480,13 @@ public class RealmManager implements DataBaseManager {
         }
 
         @Override
-        public void onCompleted() {
+        public void onError(@NonNull Throwable e) {
+            e.printStackTrace();
         }
 
         @Override
-        public void onError(@NonNull Throwable e) {
-            e.printStackTrace();
+        public void onComplete() {
+
         }
 
         @Override

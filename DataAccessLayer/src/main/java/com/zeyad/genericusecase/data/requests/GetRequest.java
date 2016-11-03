@@ -2,7 +2,7 @@ package com.zeyad.genericusecase.data.requests;
 
 import android.support.annotation.NonNull;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author zeyad on 7/29/16.
@@ -10,7 +10,7 @@ import rx.Subscriber;
 public class GetRequest {
 
     private String mUrl;
-    private Subscriber mSubscriber;
+    private Disposable mSubscriber;
     private Class mDataClass, mPresentationClass;
     private boolean mPersist;
     private String mIdColumnName;
@@ -28,7 +28,7 @@ public class GetRequest {
         mShouldCache = getObjectRequestBuilder.isShouldCache();
     }
 
-    public GetRequest(@NonNull Subscriber subscriber, String url, String idColumnName,
+    public GetRequest(@NonNull Disposable subscriber, String url, String idColumnName,
                       int itemId, @NonNull Class presentationClass, Class dataClass, boolean persist,
                       boolean shouldCache) {
         mSubscriber = subscriber;
@@ -45,7 +45,7 @@ public class GetRequest {
         return mUrl;
     }
 
-    public Subscriber getSubscriber() {
+    public Disposable getSubscriber() {
         return mSubscriber;
     }
 
@@ -78,7 +78,7 @@ public class GetRequest {
         private String mIdColumnName;
         private int mItemId;
         private String mUrl;
-        private Subscriber mSubscriber;
+        private Disposable mSubscriber;
         private Class mDataClass, mPresentationClass;
         private boolean mPersist;
 
@@ -100,7 +100,7 @@ public class GetRequest {
         }
 
         @NonNull
-        public GetObjectRequestBuilder subscriber(Subscriber subscriber) {
+        public GetObjectRequestBuilder subscriber(Disposable subscriber) {
             mSubscriber = subscriber;
             return this;
         }
@@ -109,7 +109,7 @@ public class GetRequest {
             return mUrl;
         }
 
-        public Subscriber getSubscriber() {
+        public Disposable getSubscriber() {
             return mSubscriber;
         }
 

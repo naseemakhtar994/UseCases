@@ -2,8 +2,9 @@ package com.zeyad.genericusecase;
 
 import com.zeyad.genericusecase.domain.executors.PostExecutionThread;
 
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 
 /**
  * MainThread (UI Thread) implementation based on a {@link Scheduler}

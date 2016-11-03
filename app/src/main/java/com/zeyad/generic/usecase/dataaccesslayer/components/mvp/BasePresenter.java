@@ -4,7 +4,7 @@ import com.zeyad.generic.usecase.dataaccesslayer.Utils;
 import com.zeyad.genericusecase.domain.interactors.GenericUseCaseFactory;
 import com.zeyad.genericusecase.domain.interactors.IGenericUseCase;
 
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.CompositeDisposable;
 
 /**
  * @author by zeyad on 31/05/16.
@@ -12,7 +12,7 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class BasePresenter {
     private final IGenericUseCase mGenericUseCase;
 
-    private CompositeSubscription mCompositeSubscription;
+    private CompositeDisposable mCompositeSubscription;
 
     public BasePresenter() {
         mGenericUseCase = GenericUseCaseFactory.getInstance();
@@ -31,7 +31,7 @@ public abstract class BasePresenter {
         return mGenericUseCase;
     }
 
-    public CompositeSubscription getCompositeSubscription() {
+    public CompositeDisposable getCompositeSubscription() {
         return mCompositeSubscription;
     }
 }

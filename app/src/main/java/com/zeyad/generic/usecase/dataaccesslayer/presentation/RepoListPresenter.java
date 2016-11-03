@@ -5,7 +5,7 @@ import com.zeyad.genericusecase.data.requests.GetRequest;
 
 import javax.inject.Inject;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * @author zeyad on 11/1/16.

@@ -31,10 +31,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.RealmQuery;
-import rx.Observable;
-import rx.schedulers.Schedulers;
-
 
 /**
  * This class is a general implementation that represents a use case for retrieving data.
@@ -321,7 +321,7 @@ public class GenericUseCase implements IGenericUseCase {
      * @return the transformed observable
      */
     @NonNull
-    private <T> Observable.Transformer<T, T> applySchedulers() {
+    private <T> ObservableTransformer<T, T> applySchedulers() {
         return observable -> observable.subscribeOn(Schedulers.from(mThreadExecutor))
                 .observeOn(mPostExecutionThread.getScheduler())
                 .unsubscribeOn(Schedulers.from(mThreadExecutor));

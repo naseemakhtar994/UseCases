@@ -1,8 +1,8 @@
 package com.zeyad.genericusecase.data.mockable;
 
-import rx.Observable;
+import io.reactivex.observers.DisposableObserver;
 
-public class ObjectObservable extends Observable<Object> {
+public class ObjectObservable extends DisposableObserver<Object> {
     protected ObjectObservable(OnSubscribe<Object> f) {
         super(f);
     }

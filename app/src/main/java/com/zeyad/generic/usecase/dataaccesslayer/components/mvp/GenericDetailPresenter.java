@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.zeyad.generic.usecase.dataaccesslayer.components.ErrorMessageFactory;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author by zeyad on 17/05/16.
@@ -92,7 +92,7 @@ public abstract class GenericDetailPresenter<M> extends BasePresenter {
         this.mGenericDetailView = mViewDetailsView;
     }
 
-    public final class ItemDetailSubscriber extends Subscriber<M> {
+    public final class ItemDetailSubscriber extends Disposable<M> {
         @Override
         public void onCompleted() {
             hideViewLoading();

@@ -2,7 +2,7 @@ package com.zeyad.generic.usecase.dataaccesslayer.components.eventbus;
 
 import android.support.annotation.NonNull;
 
-import rx.Observable;
+import io.reactivex.Observable;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 

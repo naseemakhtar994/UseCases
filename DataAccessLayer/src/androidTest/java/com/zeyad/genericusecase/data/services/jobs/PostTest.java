@@ -25,7 +25,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 
 import okhttp3.RequestBody;
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static android.app.job.JobInfo.NETWORK_TYPE_ANY;
 import static com.google.android.gms.gcm.Task.NETWORK_STATE_CONNECTED;

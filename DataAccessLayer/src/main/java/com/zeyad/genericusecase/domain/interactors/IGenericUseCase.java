@@ -6,8 +6,8 @@ import com.zeyad.genericusecase.data.requests.FileIORequest;
 import com.zeyad.genericusecase.data.requests.GetRequest;
 import com.zeyad.genericusecase.data.requests.PostRequest;
 
+import io.reactivex.Observable;
 import io.realm.RealmQuery;
-import rx.Observable;
 
 public interface IGenericUseCase {
     /**

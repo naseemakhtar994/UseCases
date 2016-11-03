@@ -22,8 +22,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import io.reactivex.subscribers.TestSubscriber;
 import io.realm.RealmQuery;
-import rx.observers.TestSubscriber;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -77,7 +77,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.dynamicGetList(null, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -86,7 +86,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.dynamicGetList(null, null, mDiskDataStoreRobot.getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         final List<Object> list = subscriber.getOnNextEvents().get(0);
         assertThat(list, is(Matchers.iterableWithSize(10)));
     }
@@ -96,7 +96,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.dynamicGetList(null, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         final List<Object> list = subscriber.getOnNextEvents().get(0);
         assertThat(list, is(Matchers.iterableWithSize(10)));
     }
@@ -106,9 +106,8 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         int testModelId = mDiskDataStoreRobot.getPrimaryIdForAnyInsertedTestModel();
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
-        mDiskDataStore
-                .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, false)
-                .subscribe(subscriber);
+        mDiskDataStore.dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, false)
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -119,7 +118,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, mDiskDataStoreRobot.getDomainClass(), mDiskDataStoreRobot.getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat("id searched for:" + testModelId, subscriber.getOnNextEvents(), allOf(notNullValue(), iterableWithSize(1)));
     }
 
@@ -130,7 +129,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(subscriber.getOnNextEvents().get(0), allOf(notNullValue(), instanceOf(mDiskDataStoreRobot.getDomainClass())));
     }
 
@@ -141,7 +140,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((TestViewModel) subscriber.getOnNextEvents().get(0)).getTestInfo(), is(equalTo(mDiskDataStoreRobot.getTestInfo(testModelId))));
     }
 
@@ -152,7 +151,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -163,7 +162,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat("id searched for:" + testModelId, subscriber.getOnNextEvents(), allOf(notNullValue(), iterableWithSize(1)));
     }
 
@@ -174,7 +173,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(subscriber.getOnNextEvents().get(0), allOf(notNullValue(), instanceOf(mDiskDataStoreRobot.getDomainClass())));
     }
 
@@ -185,7 +184,7 @@ public class DiskDataStoreTest {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStore
                 .dynamicGetObject(null, "id", testModelId, null, mDiskDataStoreRobot.getDataClass(), false, true)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((TestViewModel) subscriber.getOnNextEvents().get(0)).getTestInfo(), is(equalTo(mDiskDataStoreRobot.getTestInfo(testModelId))));
     }
 
@@ -195,7 +194,7 @@ public class DiskDataStoreTest {
         int idToLookFor = mDiskDataStoreRobot.getPrimaryIdForAnyInsertedTestModel();
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.searchDisk(String.valueOf(idToLookFor), "id", null, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -204,7 +203,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.searchDisk(mDiskDataStoreRobot.getPrefixForTestModel(), "value", null, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -213,7 +212,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.searchDisk(mDiskDataStoreRobot.getPrefixForTestModel(), "value", null, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)), is(iterableWithSize(10)));
     }
 
@@ -222,7 +221,7 @@ public class DiskDataStoreTest {
         mDiskDataStoreRobot.insertTestModels(10);
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mDiskDataStore.searchDisk(mDiskDataStoreRobot.getPrefixForTestModel(), "value", null, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)).get(0), is(instanceOf(mDiskDataStoreRobot.getDomainClass())));
     }
 
@@ -234,7 +233,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForValue(mDiskDataStoreRobot.getPrefixForTestModel());
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -246,7 +245,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForValue(mDiskDataStoreRobot.getPrefixForTestModel());
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)), is(iterableWithSize(10)));
     }
 
@@ -258,7 +257,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForValue(mDiskDataStoreRobot.getPrefixForTestModel());
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)).get(0), is(instanceOf(mDiskDataStoreRobot.getDomainClass())));
     }
 
@@ -270,7 +269,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForAnyId();
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
     }
 
@@ -282,7 +281,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForAnyId();
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)), is(iterableWithSize(1)));
     }
 
@@ -294,7 +293,7 @@ public class DiskDataStoreTest {
                 = mDiskDataStoreRobot
                 .getRealmQueryForAnyId();
         mDiskDataStore.searchDisk(realmQuery, mDiskDataStoreRobot.getDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         assertThat(((List<Object>) subscriber.getOnNextEvents().get(0)).get(0), is(instanceOf(mDiskDataStoreRobot.getDomainClass())));
     }
 
@@ -392,7 +391,7 @@ public class DiskDataStoreTest {
     public void testDynamicDownloadFile_ifErrorIsThrown() throws Exception {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mDiskDataStoreRobot.dynamicDownloadFile(mDiskDataStore)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         subscriber.assertError(IllegalStateException.class);
     }
 

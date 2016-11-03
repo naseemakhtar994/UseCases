@@ -41,9 +41,9 @@ import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+ import io.reactivex.disposables.Disposable;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
@@ -168,7 +168,7 @@ class CloudDataStoreTestRobot {
         return Observable.create(
                 new Observable.OnSubscribe<List>() {
                     @Override
-                    public void call(@NonNull Subscriber<? super List> subscriber) {
+                    public void call(@NonNull Disposable<? super List> subscriber) {
                         subscriber.onNext(Collections.singletonList(createTestModel()));
                     }
                 });
@@ -247,7 +247,7 @@ class CloudDataStoreTestRobot {
                 , getValidDomainClass()
                 , getValidDataClass()
                 , toPersist
-                , false).subscribe(listTestSubscriber);
+                , false).subscribeWith(listTestSubscriber);
         return listTestSubscriber;
     }
 
@@ -257,7 +257,7 @@ class CloudDataStoreTestRobot {
         cloudDataStore.dynamicGetList(getValidUrl()
                 , getValidDomainClass()
                 , getValidDataClass()
-                , toPersist, toCahce).subscribe(listTestSubscriber);
+                , toPersist, toCahce).subscribeWith(listTestSubscriber);
         return listTestSubscriber;
     }
 
@@ -272,7 +272,7 @@ class CloudDataStoreTestRobot {
                         , getValidDataClass()
                         , toPersist
                         , false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -287,7 +287,7 @@ class CloudDataStoreTestRobot {
                         , getValidDataClass()
                         , toPersist
                         , toCache)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -301,7 +301,7 @@ class CloudDataStoreTestRobot {
                 , getValidDataClass()
                 , false
                 , toPersist)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -315,7 +315,7 @@ class CloudDataStoreTestRobot {
                 , getValidDataClass()
                 , false
                 , toPersist)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -369,7 +369,7 @@ class CloudDataStoreTestRobot {
                 , getValidDataClass()
                 , false
                 , toPersist)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -383,7 +383,7 @@ class CloudDataStoreTestRobot {
                 , getValidDataClass()
                 , false
                 , toPersist)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -392,7 +392,7 @@ class CloudDataStoreTestRobot {
 
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         cloudDataStore.dynamicUploadFile(getValidUrl(), getValidFile(), onWifi, true, false, getValidDataClass())
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 

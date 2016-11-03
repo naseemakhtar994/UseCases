@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.subscribers.TestSubscriber;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
 
 class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
 
@@ -44,7 +44,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     @Override
     public void tearDown() {
         mDBManager.evictAll(TestModel.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
     }
 
     @NonNull
@@ -109,13 +109,13 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     @Override
     public void addTestModel(TestModel model) {
         mDBManager.put(model, TestModel.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
     }
 
     @Override
     public int getPrimaryIdForAnyInsertedTestModel() {
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
-        mDBManager.getAll(getDataClass()).subscribe(subscriber);
+        mDBManager.getAll(getDataClass()).subscribeWith(subscriber);
         List<TestModel> testModelList = subscriber.getOnNextEvents().get(0);
         return testModelList.get(mRandom.nextInt(testModelList.size())).getId();
     }
@@ -151,7 +151,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     @Override
     public List<Long> getListOfAllIds() {
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
-        mDBManager.getAll(getDataClass()).subscribe(subscriber);
+        mDBManager.getAll(getDataClass()).subscribeWith(subscriber);
         final List<TestModel> list = ((RealmResults) subscriber.getOnNextEvents().get(0));
         int count = list.size();
         List<Long> listOfId = new ArrayList<>();
@@ -164,7 +164,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     @Override
     public int getItemCount() {
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
-        mDBManager.getAll(getDataClass()).subscribe(subscriber);
+        mDBManager.getAll(getDataClass()).subscribeWith(subscriber);
         return subscriber.getOnNextEvents().get(0).size();
     }
 
@@ -178,7 +178,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
         diskDataStore.dynamicDeleteCollection(null, DataRepository.DEFAULT_ID_KEY
                         , ModelConverters.convertToJsonArray(listOfAllIds)
                 , getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -188,7 +188,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
         insertTestModels(10);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         diskDataStore.dynamicDeleteAll(null, TestModel.class, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -219,7 +219,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     public TestSubscriber<Object> postTestModelKeyValuePair(@NonNull DataStore diskDataStore) throws JSONException {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         diskDataStore.dynamicPostObject(null, "id", getTestModelJson(), getDomainClass(), getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -228,7 +228,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     public TestSubscriber<Object> putTestModelKeyValuePair(@NonNull DataStore diskDataStore) throws JSONException {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         diskDataStore.dynamicPutObject(null, "id", getTestModelJson(), getDomainClass(), getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 
@@ -237,7 +237,7 @@ class DiskDataStoreRobot implements DiskDataStoreRobotInterface {
     public TestSubscriber<Object> postTestModelJsonObject(@NonNull DataStore diskDataStore) {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         diskDataStore.dynamicPostObject(null, "id", getTestModelJson(), getDomainClass(), getDataClass(), false, false)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         return subscriber;
     }
 

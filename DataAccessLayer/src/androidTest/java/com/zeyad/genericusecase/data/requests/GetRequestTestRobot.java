@@ -3,8 +3,8 @@ package com.zeyad.genericusecase.data.requests;
 import com.zeyad.genericusecase.data.services.realm_test_models.TestModel;
 import com.zeyad.genericusecase.data.services.realm_test_models.TestViewModel;
 
-import rx.Subscriber;
-import rx.observers.TestSubscriber;
+ import io.reactivex.disposables.Disposable;
+import io.reactivex.subscribers.TestSubscriber;
 
 class GetRequestTestRobot {
 
@@ -12,7 +12,7 @@ class GetRequestTestRobot {
     static final boolean TO_PERSIST = false;
     static final String ID_COLUMN_NAME = "id";
     static final Class PRESENTATION_CLASS = TestViewModel.class;
-    static final Subscriber SUBSCRIBER = new TestSubscriber<>();
+    static final Disposable SUBSCRIBER = new TestSubscriber<>();
     static final String URL = "www.google.com";
     static final boolean SHOULD_CACHE = true;
     static final Integer ID_COLUMN_ID = 1;

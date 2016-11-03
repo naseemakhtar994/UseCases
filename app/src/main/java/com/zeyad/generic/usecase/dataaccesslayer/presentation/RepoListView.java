@@ -1,6 +1,6 @@
 package com.zeyad.generic.usecase.dataaccesslayer.presentation;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * @author zeyad on 11/1/16.

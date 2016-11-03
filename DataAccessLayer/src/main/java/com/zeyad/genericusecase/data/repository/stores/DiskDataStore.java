@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import io.realm.RealmQuery;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class DiskDataStore implements DataStore {
 

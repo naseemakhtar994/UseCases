@@ -32,14 +32,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import io.reactivex.subscribers.TestSubscriber;
 import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -77,9 +77,9 @@ public class RealmManagerImplTest {
         TestUtility.performInitialSetupOfDb(InstrumentationRegistry.getTargetContext());
         mRandom = new Random();
         mRealmManager = getGeneralRealmManager();
-        mRealmManager.evictAll(TestModel.class).subscribe(new TestSubscriber<>());
-        mRealmManager.evictAll(RealmModelClass.class).subscribe(new TestSubscriber<>());
-        mRealmManager.evictAll(ModelWithStringPrimaryKey.class).subscribe(new TestSubscriber<>());
+        mRealmManager.evictAll(TestModel.class).subscribeWith(new TestSubscriber<>());
+        mRealmManager.evictAll(RealmModelClass.class).subscribeWith(new TestSubscriber<>());
+        mRealmManager.evictAll(ModelWithStringPrimaryKey.class).subscribeWith(new TestSubscriber<>());
     }
 
     @After
@@ -136,7 +136,7 @@ public class RealmManagerImplTest {
         JSONObject jsonObject = new JSONObject(json);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(jsonObject, "id", TestModel.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         subscriber.assertValue(Boolean.TRUE);
     }
 
@@ -152,7 +152,7 @@ public class RealmManagerImplTest {
         Observable<?> observable
                 = mRealmManager.put(createTestModelWithRandomId(), RealmManagerImplTest.class);
         TestSubscriber<Object> subscriber = TestSubscriber.create();
-        observable.subscribe(subscriber);
+        observable.subscribeWith(subscriber);
         subscriber.assertValue(Boolean.TRUE);
     }
 
@@ -167,7 +167,7 @@ public class RealmManagerImplTest {
             RealmManager realmManager
                     = getGeneralRealmManager();
             realmManager.put(jsonObject, "id", TestModel.class)
-                    .subscribe(subscriber);
+                    .subscribeWith(subscriber);
             subscriber.assertNoErrors();
         });
 
@@ -184,7 +184,7 @@ public class RealmManagerImplTest {
                 = getGeneralRealmManager();
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         realmManager.put(jsonObject[0], "id", TestModel.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         subscriber.assertNoErrors();
     }
 
@@ -236,14 +236,14 @@ public class RealmManagerImplTest {
         Observable<Boolean> evictObservable
                 = mRealmManager.evictAll(TestModel.class);
         final TestSubscriber<Boolean> evictAllSubscriber = new TestSubscriber<>();
-        evictObservable.subscribe(evictAllSubscriber);
+        evictObservable.subscribeWith(evictAllSubscriber);
         evictAllSubscriber.assertValue(Boolean.TRUE);
         assertGetAllForSize(TestModel.class, 0);
     }
 
     @Test
     public void testEvictAllMethod_ifNoExceptionIsThrown_IfIncorrectClassnameIsPassed() {
-        mRealmManager.evictAll(TestModel.class).subscribe(new TestSubscriber<>());
+        mRealmManager.evictAll(TestModel.class).subscribeWith(new TestSubscriber<>());
     }
 
     @Test
@@ -253,7 +253,7 @@ public class RealmManagerImplTest {
         Observable<Boolean> evictObservable
                 = mRealmManager.evictAll(TestModel.class);
         final TestSubscriber<Boolean> evictAllSubscriber = new TestSubscriber<>();
-        evictObservable.subscribe(evictAllSubscriber);
+        evictObservable.subscribeWith(evictAllSubscriber);
         evictAllSubscriber.assertValue(Boolean.TRUE);
         assertGetAllForSize(TestModel.class, 0);
     }
@@ -275,7 +275,7 @@ public class RealmManagerImplTest {
         TestUtility.getJsonObjectFrom(jsonObjectArray, modelWithStringPrimaryKey);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(jsonObjectArray[0], "studentId", ModelWithStringPrimaryKey.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
         assertGetAllForSize(ModelWithStringPrimaryKey.class, 1);
     }
@@ -288,7 +288,7 @@ public class RealmManagerImplTest {
         TestUtility.getJsonObjectFrom(jsonObjectArray, modelWithStringPrimaryKey);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(jsonObjectArray[0], "id", ModelWithStringPrimaryKey.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
         assertGetAllForSize(ModelWithStringPrimaryKey.class, 1);
     }
@@ -302,7 +302,7 @@ public class RealmManagerImplTest {
         TestUtility.getJsonObjectFrom(jsonObjectArray, modelWithStringPrimaryKey);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(jsonObjectArray[0], "studentId", ModelWithStringPrimaryKey.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
         assertGetAllForSize(ModelWithStringPrimaryKey.class, 1);
     }
@@ -342,7 +342,7 @@ public class RealmManagerImplTest {
     @Test
     public void testPutRealmObject_ifCorrectNumberOfItemsAreInserted_whenSingleItemIsInserted() {
         Observable<?> observable = mRealmManager.put(createTestModelWithRandomId(), TestModel.class);
-        observable.subscribe(new TestSubscriber<>());
+        observable.subscribeWith(new TestSubscriber<>());
         assertGetAllForSize(TestModel.class, 1);
     }
 
@@ -350,7 +350,7 @@ public class RealmManagerImplTest {
     public void testPutRealmObject_ifCorrectNumberOfItemsAreInserted_whenMultipleItemAreInserted() {
         for (int i = 0; i < TestUtility.EXECUTION_COUNT_SMALL; i++) {
             Observable<?> observable = mRealmManager.put(createTestModelWithRandomId(), TestModel.class);
-            observable.subscribe(new TestSubscriber<>());
+            observable.subscribeWith(new TestSubscriber<>());
         }
         assertGetAllForSize(TestModel.class, TestUtility.EXECUTION_COUNT_SMALL);
     }
@@ -359,16 +359,16 @@ public class RealmManagerImplTest {
     public void testPutRealmObject_ifModelIsUpdated_whenUpdatedModelIsInserted() {
         final TestModel testModelInstance = createTestModelWithRandomId();
         mRealmManager.put(testModelInstance, TestModel.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         testModelInstance.setValue("test update");
         mRealmManager.put(testModelInstance, TestModel.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         //check if no duplicates are added
         assertGetAllForSize(TestModel.class, 1);
         //check if values are updated or not
         final TestSubscriber<Object> getItemByIdSubscriber = new TestSubscriber<>();
         mRealmManager.getById("id", testModelInstance.getId(), TestModel.class)
-                .subscribe(getItemByIdSubscriber);
+                .subscribeWith(getItemByIdSubscriber);
         TestModel currentModel
                 = assertSubscriberGetSingleNextEventWithNoError(getItemByIdSubscriber
                 , TestModel.class);
@@ -399,7 +399,7 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
+                .subscribeWith(querySubscriber);
         querySubscriber.assertNoErrors();
     }
 
@@ -415,8 +415,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents(), iterableWithSize(1));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents(), iterableWithSize(1));
     }
 
     /**
@@ -431,8 +431,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents().get(0), is(instanceOf(RealmResults.class)));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents().get(0), is(instanceOf(RealmResults.class)));
     }
 
     /**
@@ -447,8 +447,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
-        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getEvents().get(0);
         assertThat(queryResults, is(iterableWithSize(1)));
     }
 
@@ -464,8 +464,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
-        RealmResults<?> queryResults = (RealmResults<?>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<?> queryResults = (RealmResults<?>) querySubscriber.getEvents().get(0);
         assertThat(queryResults.get(0), is(instanceOf(TestModel.class)));
     }
 
@@ -481,8 +481,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue()
                 , "value")
-                .subscribe(querySubscriber);
-        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getEvents().get(0);
         assertThat(queryResults.get(0), is(equalTo(insertedTestModel)));
     }
 
@@ -498,8 +498,8 @@ public class RealmManagerImplTest {
         mRealmManager.getWhere(TestModel.class
                 , insertedTestModel.getValue().toUpperCase()       //upper case the value of instance
                 , "value")
-                .subscribe(querySubscriber);
-        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getEvents().get(0);
         assertThat(queryResults.get(0), is(equalTo(insertedTestModel)));
     }
 
@@ -527,7 +527,7 @@ public class RealmManagerImplTest {
         mRealmManager.getById("id"
                 , insertedTestModel.getId()
                 , TestModel.class)
-                .subscribe(querySubscriber);
+                .subscribeWith(querySubscriber);
         querySubscriber.assertNoErrors();
     }
 
@@ -543,8 +543,8 @@ public class RealmManagerImplTest {
         mRealmManager.getById("id"
                 , insertedTestModel.getId()
                 , TestModel.class)
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents(), iterableWithSize(1));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents(), iterableWithSize(1));
     }
 
     /**
@@ -559,8 +559,8 @@ public class RealmManagerImplTest {
         mRealmManager.getById("id"
                 , insertedTestModel.getId()
                 , TestModel.class)
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents().get(0), is(instanceOf(TestModel.class)));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents().get(0), is(instanceOf(TestModel.class)));
     }
 
     /**
@@ -575,8 +575,8 @@ public class RealmManagerImplTest {
         mRealmManager.getById("id"
                 , insertedTestModel.getId()
                 , TestModel.class)
-                .subscribe(querySubscriber);
-        TestModel returnedTestModel = (TestModel) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        TestModel returnedTestModel = (TestModel) querySubscriber.getEvents().get(0);
         assertThat(returnedTestModel, is(equalTo(insertedTestModel)));
     }
 
@@ -592,8 +592,8 @@ public class RealmManagerImplTest {
         mRealmManager.getById("id"
                 , TestUtility.INVALID_ITEM_ID
                 , TestModel.class)
-                .subscribe(querySubscriber);
-        TestModel returnedTestModel = (TestModel) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        TestModel returnedTestModel = (TestModel) querySubscriber.getEvents().get(0);
         int maxId = Utils.getMaxId(TestModel.class, "id");
         assertThat(returnedTestModel.getId(), is(equalTo(maxId)));
     }
@@ -620,7 +620,7 @@ public class RealmManagerImplTest {
         RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         final TestSubscriber<List> querySubscriber = new TestSubscriber<>();
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
+                .subscribeWith(querySubscriber);
         querySubscriber.assertNoErrors();
     }
 
@@ -635,8 +635,8 @@ public class RealmManagerImplTest {
         final TestSubscriber<List> querySubscriber = new TestSubscriber<>();
         RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents(), iterableWithSize(1));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents(), iterableWithSize(1));
     }
 
     /**
@@ -650,8 +650,8 @@ public class RealmManagerImplTest {
         final TestSubscriber<List> querySubscriber = new TestSubscriber<>();
         final RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
-        assertThat(querySubscriber.getOnNextEvents().get(0), is(instanceOf(RealmResults.class)));
+                .subscribeWith(querySubscriber);
+        assertThat(querySubscriber.getEvents().get(0), is(instanceOf(RealmResults.class)));
     }
 
     /**
@@ -665,8 +665,8 @@ public class RealmManagerImplTest {
         final RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         putTestModel(mRealmManager, insertedTestModel);
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
-        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getEvents().get(0);
         assertThat(queryResults, is(iterableWithSize(1)));
     }
 
@@ -681,8 +681,8 @@ public class RealmManagerImplTest {
         final RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         putTestModel(mRealmManager, insertedTestModel);
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
-        RealmResults<?> queryResults = (RealmResults<?>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<?> queryResults = (RealmResults<?>) querySubscriber.getEvents().get(0);
         assertThat(queryResults.get(0), is(instanceOf(TestModel.class)));
     }
 
@@ -697,8 +697,8 @@ public class RealmManagerImplTest {
         final RealmQuery<TestModel> realmQuery = getExactTestModelRealmQuery(insertedTestModel);
         putTestModel(mRealmManager, insertedTestModel);
         mRealmManager.getWhere(realmQuery)
-                .subscribe(querySubscriber);
-        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getOnNextEvents().get(0);
+                .subscribeWith(querySubscriber);
+        RealmResults<TestModel> queryResults = (RealmResults<TestModel>) querySubscriber.getEvents().get(0);
         assertThat(queryResults.get(0), is(equalTo(insertedTestModel)));
     }
 
@@ -706,8 +706,8 @@ public class RealmManagerImplTest {
     public void testGetAll_ifCorrectNumberOfRecordsAreFetched_whenMultipleRecordsAreInserted() {
         TestUtility.executeMultipleTimes(TestUtility.EXECUTION_COUNT_VERY_SMALL, () -> putTestModel(mRealmManager));
         final TestSubscriber<List> getAllSubscriber = new TestSubscriber<>();
-        mRealmManager.getAll(TestModel.class).subscribe(getAllSubscriber);
-        assertThat(getAllSubscriber.getOnNextEvents().get(0).size()
+        mRealmManager.getAll(TestModel.class).subscribeWith(getAllSubscriber);
+        assertThat(getAllSubscriber.getEvents().get(0).size()
                 , is(equalTo(TestUtility.EXECUTION_COUNT_VERY_SMALL)));
     }
 
@@ -715,16 +715,16 @@ public class RealmManagerImplTest {
     public void testGetAll_ifCorrectNumberOfRecordsAreFetched_whenSingleRecordIsInserted() {
         putTestModel(mRealmManager);
         final TestSubscriber<List> getAllSubscriber = new TestSubscriber<>();
-        mRealmManager.getAll(TestModel.class).subscribe(getAllSubscriber);
-        assertThat(getAllSubscriber.getOnNextEvents().get(0).size()
+        mRealmManager.getAll(TestModel.class).subscribeWith(getAllSubscriber);
+        assertThat(getAllSubscriber.getEvents().get(0).size()
                 , is(equalTo(1)));
     }
 
     @Test
     public void testGetAll_ifCorrectNumberOfRecordsAreFetched_whenNoRecordsAreInserted() {
         final TestSubscriber<List> getAllSubscriber = new TestSubscriber<>();
-        mRealmManager.getAll(TestModel.class).subscribe(getAllSubscriber);
-        assertThat(getAllSubscriber.getOnNextEvents().get(0).size()
+        mRealmManager.getAll(TestModel.class).subscribeWith(getAllSubscriber);
+        assertThat(getAllSubscriber.getEvents().get(0).size()
                 , is(equalTo(0)));
     }
 
@@ -736,8 +736,8 @@ public class RealmManagerImplTest {
         }
         final TestSubscriber<List> subscriber = new TestSubscriber<>();
         mRealmManager.getAll(TestModel.class)
-                .subscribe(subscriber);
-        List<TestModel> getModelList = subscriber.getOnNextEvents().get(0);
+                .subscribeWith(subscriber);
+        List<TestModel> getModelList = subscriber.getEvents().get(0);
         assertThatTwoCollectionsContainSameElements(listOfTestModelsInserted, getModelList);
     }
 
@@ -793,7 +793,7 @@ public class RealmManagerImplTest {
     @Test
     public void testPutRealmModel_ifCorrectNumberOfItemsAreInserted_whenSingleItemIsInserted() {
         mRealmManager.put(createRealmModelInstanceWithRandomId(), RealmModelClass.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         assertGetAllForSize(RealmModelClass.class, 1);
     }
 
@@ -801,7 +801,7 @@ public class RealmManagerImplTest {
     public void testPutRealmModel_ifNoErrorAreRaised_whenSingleItemIsInserted() {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(createRealmModelInstanceWithRandomId(), RealmModelClass.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         subscriber.assertNoErrors();
     }
 
@@ -816,7 +816,7 @@ public class RealmManagerImplTest {
     public void testPutRealmModel_ifCorrectNumberOfItemsAreInserted_whenMultipleItemAreInserted() {
         for (int i = 0; i < TestUtility.EXECUTION_COUNT_SMALL; i++) {
             mRealmManager.put(createRealmModelInstanceWithRandomId(), RealmModelClass.class)
-                    .subscribe(new TestSubscriber<>());
+                    .subscribeWith(new TestSubscriber<>());
         }
         assertGetAllForSize(RealmModelClass.class, TestUtility.EXECUTION_COUNT_SMALL);
     }
@@ -825,16 +825,16 @@ public class RealmManagerImplTest {
     public void testPutRealmModel_ifModelIsUpdated_whenUpdatedModelIsInserted() {
         final RealmModelClass testModelInstance = createRealmModelInstanceWithRandomId();
         mRealmManager.put(testModelInstance, RealmModelClass.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         testModelInstance.setValue("test update");
         mRealmManager.put(testModelInstance, RealmModelClass.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         //check if no duplicates are added
         assertGetAllForSize(RealmModelClass.class, 1);
         //check if values are updated or not
         final TestSubscriber<Object> getItemByIdSubscriber = new TestSubscriber<>();
         mRealmManager.getById("id", testModelInstance.getId(), RealmModelClass.class)
-                .subscribe(getItemByIdSubscriber);
+                .subscribeWith(getItemByIdSubscriber);
         RealmModelClass currentModel
                 = assertSubscriberGetSingleNextEventWithNoError(getItemByIdSubscriber
                 , RealmModelClass.class);
@@ -849,7 +849,7 @@ public class RealmManagerImplTest {
         //insert some realm model class
         TestUtility.executeMultipleTimes(TestUtility.EXECUTION_COUNT_VERY_SMALL
                 , () -> mRealmManager.put(createRealmModelInstanceWithRandomId()
-                        , RealmModelClass.class).subscribe(new TestSubscriber<>()));
+                        , RealmModelClass.class).subscribeWith(new TestSubscriber<>()));
         //check if correct number of realm model classes are inserted or not
         assertGetAllForSize(RealmModelClass.class, TestUtility.EXECUTION_COUNT_VERY_SMALL);
     }
@@ -858,7 +858,7 @@ public class RealmManagerImplTest {
     public void testPutRealmModel_ifWeGetWhatWeInserted_whenWeInsertAndQueryById() {
         final RealmModelClass realmModelClass = createRealmModelInstanceWithRandomId();
         mRealmManager.put(realmModelClass, RealmModelClass.class)
-                .subscribe(new TestSubscriber<>());
+                .subscribeWith(new TestSubscriber<>());
         assertThat(realmModelClass, is(equalTo(getItemForId("id", realmModelClass.getId(), RealmModelClass.class))));
     }
 
@@ -883,8 +883,8 @@ public class RealmManagerImplTest {
         final TestSubscriber<Object> testSubscriber = new TestSubscriber<>();
         for (RealmObject testModel : testModelList) {
             mRealmManager.getById("id", ((TestModel) testModel).getId(), TestModel.class)
-                    .subscribe(testSubscriber);
-            assertThat(testSubscriber.getOnNextEvents(), allOf(iterableWithSize(1), notNullValue()));
+                    .subscribeWith(testSubscriber);
+            assertThat(testSubscriber.getEvents(), allOf(iterableWithSize(1), notNullValue()));
         }
     }
 
@@ -909,8 +909,8 @@ public class RealmManagerImplTest {
         TestModel insertedTestModel = putTestModel(mRealmManager);
         final TestSubscriber<Object> testSubscriber = new TestSubscriber<>();
         mRealmManager.getById("id", (insertedTestModel).getId(), TestModel.class)
-                .subscribe(testSubscriber);
-        assertThat(testSubscriber.getOnNextEvents(), allOf(iterableWithSize(1), notNullValue()));
+                .subscribeWith(testSubscriber);
+        assertThat(testSubscriber.getEvents(), allOf(iterableWithSize(1), notNullValue()));
     }
 
     @Test
@@ -934,9 +934,9 @@ public class RealmManagerImplTest {
         //lets try deleting these
         final TestSubscriber<Object> deleteCollectionSubscriber = new TestSubscriber<>();
         mRealmManager.evictCollection("id"
-                , listOfIdToDelete, TestModel.class).subscribe(deleteCollectionSubscriber);
+                , listOfIdToDelete, TestModel.class).subscribeWith(deleteCollectionSubscriber);
         deleteCollectionSubscriber.assertNoErrors();
-        assertThat(deleteCollectionSubscriber.getOnNextEvents().get(0), is(equalTo(Boolean.TRUE)));
+        assertThat(deleteCollectionSubscriber.getEvents().get(0), is(equalTo(Boolean.TRUE)));
         RealmResults<TestModel> testModelList = getQueryList(TestModel.class);
         for (TestModel testModel : testModelList) {
             assertThat(listOfIdToDelete, not(IsCollectionContaining.hasItem((long) testModel.getId())));
@@ -963,9 +963,9 @@ public class RealmManagerImplTest {
         //lets try deleting these
         final TestSubscriber<Object> deleteCollectionSubscriber = new TestSubscriber<>();
         mRealmManager.evictCollection("id"
-                , listOfIdToDelete, TestModel.class).subscribe(deleteCollectionSubscriber);
+                , listOfIdToDelete, TestModel.class).subscribeWith(deleteCollectionSubscriber);
         deleteCollectionSubscriber.assertNoErrors();
-        assertThat(deleteCollectionSubscriber.getOnNextEvents().get(0), is(equalTo(Boolean.FALSE)));
+        assertThat(deleteCollectionSubscriber.getEvents().get(0), is(equalTo(Boolean.FALSE)));
         RealmResults<TestModel> testModelList = getQueryList(TestModel.class);
         //all ids before INVALID_ITEM_ID should be deleted
         int i = 0;
@@ -988,7 +988,7 @@ public class RealmManagerImplTest {
         mRealmManager.evictCollection("id"
                 , Collections.singletonList(Long.valueOf(insertedTestModel.getId()))
                 , TestModel.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         TestUtility.assertNoErrors(subscriber);
         subscriber.assertValue(Boolean.TRUE);
     }
@@ -996,15 +996,15 @@ public class RealmManagerImplTest {
     @NonNull
     private <T> T getItemForId(@NonNull String idFieldName, long idFieldValue, Class<T> clazz) {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
-        mRealmManager.getById(idFieldName, (int) idFieldValue, clazz).subscribe(subscriber);
-        return (T) subscriber.getOnNextEvents().get(0);
+        mRealmManager.getById(idFieldName, (int) idFieldValue, clazz).subscribeWith(subscriber);
+        return (T) subscriber.getEvents().get(0);
     }
 
     @NonNull
     private TestModel getManagedObject(@NonNull TestModel testModel, @NonNull RealmManager realmManager) {
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
-        realmManager.getById("id", testModel.getId(), TestModel.class).subscribe(subscriber);
-        return (TestModel) subscriber.getOnNextEvents().get(0);
+        realmManager.getById("id", testModel.getId(), TestModel.class).subscribeWith(subscriber);
+        return (TestModel) subscriber.getEvents().get(0);
     }
 
     private void createJsonObjectInWorkerThreadAndInsertInUi() {
@@ -1035,9 +1035,9 @@ public class RealmManagerImplTest {
         Observable<List> queryObservable = mRealmManager.getAll(clazz);
         assertThat(queryObservable, notNullValue());
         final TestSubscriber<List> querySubscriber = new TestSubscriber<>();
-        queryObservable.subscribe(querySubscriber);
+        queryObservable.subscribeWith(querySubscriber);
         TestUtility.assertNoErrors(querySubscriber);
-        final List<List> onNextEvents = querySubscriber.getOnNextEvents();
+        final List<List> onNextEvents = querySubscriber.getEvents();
         assertThat(onNextEvents, allOf(notNullValue(), iterableWithSize(1)));
         final List queryResult = onNextEvents.get(0);
         assertThat(queryResult, allOf(instanceOf(RealmResults.class)
@@ -1056,7 +1056,7 @@ public class RealmManagerImplTest {
     @NonNull
     private <T> T assertSubscriberGetSingleNextEventWithNoError(@NonNull TestSubscriber subscriber, Class<T> clazz) {
         subscriber.assertNoErrors();
-        final List<List> onNextEvents = subscriber.getOnNextEvents();
+        final List<List> onNextEvents = subscriber.getEvents();
         assertThat(onNextEvents, allOf(notNullValue(), iterableWithSize(1)));
         assertThat(onNextEvents.get(0), is(instanceOf(clazz)));
         return ((T) onNextEvents.get(0));
@@ -1088,8 +1088,8 @@ public class RealmManagerImplTest {
 
     private void assertPutOperationObservable(@NonNull Observable<?> observable) {
         final TestSubscriber<Object> subscriber = TestSubscriber.create();
-        observable.subscribe(subscriber);
-        List<Object> onNextEvents = subscriber.getOnNextEvents();
+        observable.subscribeWith(subscriber);
+        List<Object> onNextEvents = subscriber.getEvents();
         List<Throwable> onErrorEvents = subscriber.getOnErrorEvents();
         subscriber.assertNoErrors();
         assertThat(onNextEvents, allOf(Matchers.iterableWithSize(1)
@@ -1118,7 +1118,7 @@ public class RealmManagerImplTest {
         JSONObject jsonObject = new JSONObject(json);
         final TestSubscriber<Object> subscriber = new TestSubscriber<>();
         mRealmManager.put(jsonObject, "id", TestModel.class)
-                .subscribe(subscriber);
+                .subscribeWith(subscriber);
         subscriber.assertNoErrors();
         return testModel;
     }
@@ -1131,7 +1131,7 @@ public class RealmManagerImplTest {
         Observable<?> observable
                 = dataBaseManager.put(realmModel, RealmManagerImplTest.class);
         TestSubscriber<Object> subscriber = TestSubscriber.create();
-        observable.subscribe(subscriber);
+        observable.subscribeWith(subscriber);
         TestUtility.printThrowables(subscriber.getOnErrorEvents());
         TestUtility.assertNoErrors(subscriber);
         return realmModel;

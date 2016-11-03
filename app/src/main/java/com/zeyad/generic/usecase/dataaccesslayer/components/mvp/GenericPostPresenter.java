@@ -6,7 +6,7 @@ import com.zeyad.generic.usecase.dataaccesslayer.components.ErrorMessageFactory;
 
 import java.util.HashMap;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author by zeyad on 23/05/16.
@@ -58,7 +58,7 @@ public abstract class GenericPostPresenter<M> extends BasePresenter {
         return mGenericPostView;
     }
 
-    public final class PostSubscriber extends Subscriber<M> {
+    public final class PostSubscriber extends Disposable<M> {
         @Override
         public void onCompleted() {
             hideViewLoading();

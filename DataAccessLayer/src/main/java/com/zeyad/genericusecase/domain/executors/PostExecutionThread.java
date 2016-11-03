@@ -1,6 +1,6 @@
 package com.zeyad.genericusecase.domain.executors;
 
-import rx.Scheduler;
+import io.reactivex.Scheduler;
 
 /**
  * Thread abstraction created to change the execution context from any thread to any other thread.

@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author by zeyad on 19/05/16.
@@ -27,7 +27,7 @@ public abstract class GenericListExtendedPresenter<M, H extends RecyclerView.Vie
     }
 
     // TODO: 10/05/16 combine Search and List subscribers!
-    public final class ItemListSubscriber extends Subscriber<List<M>> {
+    public final class ItemListSubscriber extends Disposable<List<M>> {
         @Override
         public void onCompleted() {
             hideViewLoading();
@@ -48,7 +48,7 @@ public abstract class GenericListExtendedPresenter<M, H extends RecyclerView.Vie
         }
     }
 
-    public final class SearchSubscriber extends Subscriber<List<M>> {
+    public final class SearchSubscriber extends Disposable<List<M>> {
         @Override
         public void onCompleted() {
             hideViewLoading();
@@ -68,7 +68,7 @@ public abstract class GenericListExtendedPresenter<M, H extends RecyclerView.Vie
         }
     }
 
-    public final class DeleteSubscriber extends Subscriber<Boolean> {
+    public final class DeleteSubscriber extends Disposable<Boolean> {
         @Override
         public void onCompleted() {
         }

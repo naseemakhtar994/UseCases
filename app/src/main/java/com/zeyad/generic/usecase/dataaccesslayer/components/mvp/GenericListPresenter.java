@@ -7,7 +7,7 @@ import com.zeyad.generic.usecase.dataaccesslayer.components.ErrorMessageFactory;
 
 import java.util.List;
 
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * @author by zeyad on 17/05/16.
@@ -82,7 +82,7 @@ public abstract class GenericListPresenter<M, H extends RecyclerView.ViewHolder>
         return mGenericListView;
     }
 
-    public final class ItemListSubscriber extends Subscriber<List<M>> {
+    public final class ItemListSubscriber extends Disposable<List<M>> {
         @Override
         public void onCompleted() {
             hideViewLoading();

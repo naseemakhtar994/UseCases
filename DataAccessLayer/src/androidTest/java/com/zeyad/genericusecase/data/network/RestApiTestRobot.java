@@ -10,8 +10,8 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+ import io.reactivex.disposables.Disposable;
 
 class RestApiTestRobot {
     public static IApiConnection createMockedApiConnection() {
@@ -53,7 +53,7 @@ class RestApiTestRobot {
         return Observable.create(
                 new Observable.OnSubscribe<List>() {
                     @Override
-                    public void call(@NonNull Subscriber<? super List> subscriber) {
+                    public void call(@NonNull Disposable<? super List> subscriber) {
                         subscriber.onNext(Collections.singletonList(""));
                     }
                 });

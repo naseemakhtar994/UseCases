@@ -17,7 +17,7 @@ import com.zeyad.generic.usecase.dataaccesslayer.di.components.ApplicationCompon
 
 import javax.inject.Inject;
 
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.CompositeDisposable;
 
 /**
  * Base {@link Fragment} class for every fragment in this application.
@@ -28,7 +28,7 @@ public abstract class BaseFragment extends Fragment {
     public INavigator navigator;
     @Inject
     public IRxEventBus rxEventBus;
-    public CompositeSubscription mCompositeSubscription;
+    public CompositeDisposable mCompositeSubscription;
 
     public BaseFragment() {
     }

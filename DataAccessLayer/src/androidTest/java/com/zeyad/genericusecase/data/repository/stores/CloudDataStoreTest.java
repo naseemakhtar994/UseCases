@@ -29,7 +29,7 @@ import java.util.List;
 
 import io.realm.RealmObject;
 import okhttp3.RequestBody;
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static com.zeyad.genericusecase.data.repository.stores.CloudDataStoreTestRobot.argThis;
 import static org.junit.Assume.assumeFalse;

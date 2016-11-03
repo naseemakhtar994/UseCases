@@ -8,7 +8,7 @@ import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.Part;
 import retrofit2.http.Url;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * {@link RestApi} implementation for retrieving data from the network.

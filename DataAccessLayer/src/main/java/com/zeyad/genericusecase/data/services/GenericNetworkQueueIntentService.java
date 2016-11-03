@@ -10,7 +10,7 @@ import com.zeyad.genericusecase.data.services.jobs.FileIO;
 import com.zeyad.genericusecase.data.services.jobs.Post;
 import com.zeyad.genericusecase.data.utils.Utils;
 
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class GenericNetworkQueueIntentService extends IntentService {
 
@@ -18,7 +18,7 @@ public class GenericNetworkQueueIntentService extends IntentService {
             DOWNLOAD_FILE = "DOWNLOAD_FILE", UPLOAD_FILE = "UPLOAD_FILE", JOB_TYPE = "JOB_TYPE",
             POST = "POST", PAYLOAD = "payload", TRIAL_COUNT = "trialCount";
     @Nullable
-    private CompositeSubscription mCompositeSubscription;
+    private CompositeDisposable mCompositeSubscription;
 
     public GenericNetworkQueueIntentService() {
         super(GenericNetworkQueueIntentService.class.getName());

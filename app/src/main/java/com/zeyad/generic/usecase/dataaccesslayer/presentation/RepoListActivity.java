@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.Subscriber;
+ import io.reactivex.disposables.Disposable;
 
 /**
  * An activity representing a list of Repos. This activity
@@ -90,7 +90,7 @@ public class RepoListActivity extends BaseActivity {
     }
 
     private void loadRepos() {
-        mRepoListPresenter.getRepoList().subscribe(new Subscriber<List>() {
+        mRepoListPresenter.getRepoList().subscribeWith(new Disposable<List>() {
             @Override
             public void onCompleted() {
 

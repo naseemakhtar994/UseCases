@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.CompositeDisposable;
 
 /**
  * Base {@link Activity} class for every Activity in this application.
@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HasCompo
     public INavigator navigator;
     @Inject
     public IRxEventBus rxEventBus;
-    public CompositeSubscription mCompositeSubscription;
+    public CompositeDisposable mCompositeSubscription;
     private UserComponent userComponent;
 
     @Override

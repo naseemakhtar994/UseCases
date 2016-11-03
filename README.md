@@ -38,9 +38,9 @@ mGenericUseCase.getObject(new GetRequest
         .idColumnName(OrderViewModel.ID)
         .id(mItemId)
         .build())
-        .subscribe(new Subscriber<OrderViewModel>() {
+        .subscribeWith(new DisposableObserver<OrderViewModel>() {
             @Override
-            public void onCompleted() {
+            public void onComplete() {
             }
 
             @Override
@@ -70,9 +70,9 @@ mGenericUseCase.getList(new GetRequest
         .presentationClass(OrderViewModel.class)
         .url(FULL_URL)
         .build())
-        .subscribe(new Subscriber<List<OrderViewModel>>() {
+        .subscribeWith(new DisposableObserver<List<OrderViewModel>>() {
             @Override
-            public void onCompleted() {
+            public void onComplete() {
             }
 
             @Override

@@ -9,9 +9,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import io.reactivex.subscribers.TestSubscriber;
 import io.realm.RealmQuery;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
 
 public interface DiskDataStoreRobotInterface {
 

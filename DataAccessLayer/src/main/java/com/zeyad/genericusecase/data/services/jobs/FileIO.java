@@ -28,10 +28,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.observers.DisposableObserver;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import okhttp3.ResponseBody;
 
 import static android.app.job.JobInfo.NETWORK_TYPE_ANY;
 import static android.app.job.JobInfo.NETWORK_TYPE_UNMETERED;
@@ -89,55 +91,81 @@ public class FileIO {
         return type;
     }
 
-    public Subscription execute() {
+    public Disposable execute() {
         if (mIsDownload) {
             if (!mFileIORequest.getFile().exists()) {
-                return mRestApi.dynamicDownload(mFileIORequest.getUrl()).subscribe(responseBody -> {
-                    InputStream inputStream = null;
-                    OutputStream outputStream = null;
-                    try {
-                        byte[] fileReader = new byte[4096];
-                        long fileSize = responseBody.contentLength();
-                        long fileSizeDownloaded = 0;
-                        outputStream = new FileOutputStream(mFileIORequest.getFile());
-                        inputStream = responseBody.byteStream();
-                        while (true) {
-                            int read = inputStream.read(fileReader);
-                            if (read == -1)
-                                break;
-                            outputStream.write(fileReader, 0, read);
-                            fileSizeDownloaded += read;
-                            Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
-                        }
-                        outputStream.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (inputStream != null)
-                            try {
-                                inputStream.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                return mRestApi.dynamicDownload(mFileIORequest.getUrl()).subscribeWith(
+                        new DisposableObserver<ResponseBody>() {
+                            @Override
+                            public void onNext(ResponseBody responseBody) {
+                                InputStream inputStream = null;
+                                OutputStream outputStream = null;
+                                try {
+                                    byte[] fileReader = new byte[4096];
+                                    long fileSize = responseBody.contentLength();
+                                    long fileSizeDownloaded = 0;
+                                    outputStream = new FileOutputStream(mFileIORequest.getFile());
+                                    inputStream = responseBody.byteStream();
+                                    while (true) {
+                                        int read = inputStream.read(fileReader);
+                                        if (read == -1)
+                                            break;
+                                        outputStream.write(fileReader, 0, read);
+                                        fileSizeDownloaded += read;
+                                        Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                                    }
+                                    outputStream.flush();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (inputStream != null)
+                                        try {
+                                            inputStream.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    if (outputStream != null)
+                                        try {
+                                            outputStream.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                }
                             }
-                        if (outputStream != null)
-                            try {
-                                outputStream.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                queueIOFile();
+                                throwable.printStackTrace();
                             }
-                    }
-                }, throwable -> {
-                    queueIOFile();
-                    throwable.printStackTrace();
-                });
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
             }
-            return Subscriptions.empty();
+            return Disposables.empty();
         } else
             return mRestApi.upload(mFileIORequest.getUrl(), RequestBody.create(MediaType
                     .parse(getMimeType(mFileIORequest.getFile()
                             .getAbsolutePath())), mFileIORequest.getFile()))
-                    .subscribe(o -> {
-                    }, throwable -> queueIOFile());
+                    .subscribeWith(new DisposableObserver<Object>() {
+                        @Override
+                        public void onNext(Object value) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
     }
 
     void queueIOFile() {

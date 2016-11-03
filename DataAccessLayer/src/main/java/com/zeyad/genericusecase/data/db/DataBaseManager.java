@@ -8,10 +8,10 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
-import rx.Observable;
 
 /**
  * Interface for the Database modules.

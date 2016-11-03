@@ -27,8 +27,8 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+ import io.reactivex.disposables.Disposable;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
@@ -132,7 +132,7 @@ public class PostTestRobot {
         return Observable.create(
                 new Observable.OnSubscribe<List>() {
                     @Override
-                    public void call(@NonNull Subscriber<? super List> subscriber) {
+                    public void call(@NonNull Disposable<? super List> subscriber) {
                         subscriber.onNext(Collections.singletonList(createTestModel()));
                     }
                 });
@@ -152,7 +152,7 @@ public class PostTestRobot {
     }
 
 
-    public static PostRequest createPostRequestForHashmap(Subscriber subscriber, String method) {
+    public static PostRequest createPostRequestForHashmap(Disposable subscriber, String method) {
         return new PostRequest.PostRequestBuilder(getValidDataClass(), false)
                 .payLoad(new HashMap<>())
                 .idColumnName(getValidColumnName())
@@ -163,7 +163,7 @@ public class PostTestRobot {
                 .build();
     }
 
-    public static PostRequest createPostRequestForJsonObject(Subscriber subscriber, String method) {
+    public static PostRequest createPostRequestForJsonObject(Disposable subscriber, String method) {
         return new PostRequest.PostRequestBuilder(getValidDataClass(), false)
                 .payLoad(new JSONObject())
                 .idColumnName(getValidColumnName())
@@ -174,7 +174,7 @@ public class PostTestRobot {
                 .build();
     }
 
-    public static PostRequest createPostRequestForJsonArray(Subscriber subscriber, String method) {
+    public static PostRequest createPostRequestForJsonArray(Disposable subscriber, String method) {
         return new PostRequest.PostRequestBuilder(getValidDataClass(), false)
                 .payLoad(new JSONArray())
                 .idColumnName(getValidColumnName())
@@ -188,7 +188,7 @@ public class PostTestRobot {
     static Observable<ResponseBody> getResponseBodyObservable() {
         return Observable.create(new Observable.OnSubscribe<ResponseBody>() {
             @Override
-            public void call(@NonNull Subscriber<? super ResponseBody> subscriber) {
+            public void call(@NonNull Disposable<? super ResponseBody> subscriber) {
                 try {
                     subscriber.onNext(getResponseBody());
                 } catch (IOException e) {

@@ -24,8 +24,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+ import io.reactivex.disposables.Disposable;
 
 class FileIOTestRobot {
 
@@ -137,7 +137,7 @@ class FileIOTestRobot {
     static Observable<ResponseBody> getResponseBodyObservable() {
         return Observable.create(new Observable.OnSubscribe<ResponseBody>() {
             @Override
-            public void call(@NonNull Subscriber<? super ResponseBody> subscriber) {
+            public void call(@NonNull Disposable<? super ResponseBody> subscriber) {
                 try {
                     subscriber.onNext(getResponseBody());
                 } catch (IOException e) {

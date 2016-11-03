@@ -24,11 +24,11 @@ import com.zeyad.genericusecase.data.utils.Utils;
 
 import org.json.JSONObject;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import io.reactivex.observers.DisposableObserver;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 
 import static android.app.job.JobInfo.NETWORK_TYPE_ANY;
 import static com.google.android.gms.gcm.Task.NETWORK_STATE_CONNECTED;
@@ -50,20 +50,19 @@ public class Post {
     private boolean mGooglePlayServicesAvailable;
     private GcmNetworkManager mGcmNetworkManager;
     @NonNull
-    private Subscriber<Object> handleError = new Subscriber<Object>() {
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            reQueue();
-            e.printStackTrace();
-        }
-
+    private DisposableObserver<Object> handleError = new DisposableObserver<Object>() {
         @Override
         public void onNext(Object o) {
+
+        }
+
+        @Override
+        public void onError(Throwable t) {
+
+        }
+
+        @Override
+        public void onComplete() {
 
         }
     };
@@ -87,7 +86,7 @@ public class Post {
         mGcmNetworkManager = GcmNetworkManager.getInstance(mContext);
     }
 
-    public Subscription execute() {
+    public Disposable execute() {
         if (Utils.isNetworkAvailable(mContext)) {
             String bundle = "";
             boolean isObject = false;
@@ -103,33 +102,33 @@ public class Post {
                     if (isObject)
                         return mRestApi.dynamicPostObject(mPostRequest.getUrl(), RequestBody
                                 .create(MediaType.parse(APPLICATION_JSON), bundle))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
                     else
                         return mRestApi.dynamicPostList(mPostRequest.getUrl(), RequestBody.create(MediaType
                                 .parse(APPLICATION_JSON), mPostRequest.getJsonArray().toString()))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
                 case PostRequest.PUT:
                     if (isObject)
                         return mRestApi.dynamicPutObject(mPostRequest.getUrl(), RequestBody
                                 .create(MediaType.parse(APPLICATION_JSON), bundle))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
                     else
                         return mRestApi.dynamicPutList(mPostRequest.getUrl(), RequestBody.create(MediaType
                                 .parse(APPLICATION_JSON), mPostRequest.getJsonArray().toString()))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
                 case PostRequest.DELETE:
                     if (isObject)
                         return mRestApi.dynamicDeleteObject(mPostRequest.getUrl(), RequestBody
                                 .create(MediaType.parse(APPLICATION_JSON), bundle))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
                     else
                         return mRestApi.dynamicDeleteList(mPostRequest.getUrl(), RequestBody.create(MediaType
                                 .parse(APPLICATION_JSON), mPostRequest.getJsonArray().toString()))
-                                .subscribe(handleError);
+                                .subscribeWith(handleError);
             }
         } else
             reQueue();
-        return Subscriptions.empty();
+        return Disposables.empty();
     }
 
     private void reQueue() {

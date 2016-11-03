@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.zeyad.genericusecase.BuildConfig;
 import com.zeyad.genericusecase.Config;
 import com.zeyad.genericusecase.R;
@@ -41,9 +42,8 @@ import okio.BufferedSink;
 import okio.GzipSink;
 import okio.Okio;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * Api Connection class used to retrieve data from the cloud.
@@ -339,7 +339,7 @@ class ApiConnection implements com.zeyad.genericusecase.data.network.IApiConnect
                                 return false;
                             }
                         }).create()))
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
 

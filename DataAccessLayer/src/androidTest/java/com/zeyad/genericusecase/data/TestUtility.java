@@ -36,12 +36,12 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.exceptions.CompositeException;
+import io.reactivex.subscribers.TestSubscriber;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import io.realm.rx.RealmObservableFactory;
-import rx.exceptions.CompositeException;
-import rx.observers.TestSubscriber;
 
 import static android.app.job.JobInfo.NETWORK_TYPE_ANY;
 import static android.app.job.JobInfo.NETWORK_TYPE_UNMETERED;

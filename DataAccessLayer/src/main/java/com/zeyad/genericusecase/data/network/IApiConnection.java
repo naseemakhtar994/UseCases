@@ -8,7 +8,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import rx.Observable;
+import io.reactivex.Observable;
 
 interface IApiConnection {
 
